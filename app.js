@@ -1,11 +1,12 @@
 const express = require('express');
 const app = express();
+require('dotenv').config();
 app.use(express.json()); // Parse JSON bodies
 
 let todos = [
   { id: 1, task: 'Learn Node.js', completed: false },
   { id: 2, task: 'Build CRUD API', completed: false },
-  {id: 1, task: 'Learn Node.js', completed: true},
+  { id: 1, task: 'Learn Node.js', completed: true },
 ];
 
 // GET All – Read
@@ -71,5 +72,5 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Server error!' });
 });
 
-const PORT = 3002;
+const PORT = process.env.PORT ||3002;
 app.listen(PORT, () => console.log(`Server on port ${PORT}`));
