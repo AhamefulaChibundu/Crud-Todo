@@ -3,7 +3,7 @@ const app = express();
 require('dotenv').config();
 const cors = require('cors');
 const logRequest = require('./middlewares/logger');
-const validateTodo = require('./middlewares/validator');
+const postValidator = require('./middlewares/postValidator');
 const patchValidator = require('./middlewares/patchValidator');
 const errorHandler = require('./middlewares/errorHandler');
 
@@ -27,7 +27,7 @@ app.get('/todos', (req, res, next) => {
 });
 
 // POST New – Create
-app.post('/todos', validateTodo, (req, res, next) => {
+app.post('/todos', postValidator, (req, res, next) => {
   try {
     const {task} = req.body;
     if (!task) {

@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const validateTodo = (req, res, next) => {
+const postValidator = (req, res, next) => {
     const schema = Joi.object({
         task: Joi.string().min(3).max(100).required(),
         completed: Joi.boolean().default(false)
@@ -15,4 +15,4 @@ const validateTodo = (req, res, next) => {
     next();
 }
 
-module.exports = validateTodo;
+module.exports = postValidator;
