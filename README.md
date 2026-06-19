@@ -35,7 +35,7 @@ project/
 │
 ├── middlewares/
 │   ├── logger.js
-│   ├── validator.js
+│   ├── postValidator.js
 │   ├── patchValidator.js
 │   └── errorHandler.js
 │
