@@ -3,8 +3,8 @@ const app = express();
 require('dotenv').config();
 const cors = require('cors');
 const logRequest = require('./middlewares/logger');
-const postValidator = require('./middlewares/postValidator');
-const patchValidator = require('./middlewares/patchValidator');
+const validator = require('./middlewares/validator');
+const { postValidator, patchValidator } = require('./middlewares/schema');
 const errorHandler = require('./middlewares/errorHandler');
 
 app.use(express.json()); // Parse JSON bodies
@@ -26,13 +26,10 @@ app.get('/todos', (req, res, next) => {
 });
 
 // POST New – Create
-app.post('/todos', postValidator, (req, res, next) => {
+app.post('/todos', validator(postValidator), (req, res, next) => {
   try {
-    const {task} = req.body;
-    if (!task) {
-      return res.status(400).json({message: "task is required"})
-    }
-    const newTodo = { id: todos.length + 1, task, completed :false }; // Auto-ID
+    const {task, completed} = req.body;
+    const newTodo = { id: todos.length + 1, task, completed }; // Auto-ID
     todos.push(newTodo);
     res.status(201).json(newTodo); // Echo back
   } catch (error) {
@@ -41,10 +38,13 @@ app.post('/todos', postValidator, (req, res, next) => {
 });
 
 // PATCH Update – Partial
-app.patch('/todos/:id', patchValidator, (req, res, next) => {
+app.patch('/todos/:id', validator(patchValidator), (req, res, next) => {
   try {
     const todo = todos.find((t) => t.id === parseInt(req.params.id)); // Array.find()
-    if (!todo) return res.status(404).json({ message: 'Todo not found' });
+    
+    if (!todo) {
+    return res.status(404).json({ error: "Todo not found" });
+}
     Object.assign(todo, req.body); // Merge: e.g., {completed: true}
     res.status(200).json(todo);
   } catch (error) {
